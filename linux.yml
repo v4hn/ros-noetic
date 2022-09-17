@@ -1,0 +1,48 @@
+pool:
+  vmImage: ubuntu-latest
+trigger:
+- buildbranch_linux
+pr: none
+stages:
+- stage: stage_0
+  jobs:
+  - job: stage_0_job_0
+    steps:
+    - script: |
+        export CI=azure
+        export GIT_BRANCH=$BUILD_SOURCEBRANCHNAME
+        export FEEDSTOCK_NAME=$(basename ${BUILD_REPOSITORY_NAME})
+        .scripts/run_docker_build.sh
+      env:
+        ANACONDA_API_TOKEN: $(ANACONDA_API_TOKEN)
+        CURRENT_RECIPES: ros-noetic-rviz ros-noetic-image-geometry ros-noetic-cv-bridge
+          ros-noetic-mavlink ros-noetic-imu-filter-madgwick
+        DOCKER_IMAGE: condaforge/linux-anvil-cos7-x86_64
+      displayName: Build ros-noetic-rviz ros-noetic-image-geometry ros-noetic-cv-bridge
+        ros-noetic-mavlink ros-noetic-imu-filter-madgwick
+  - job: stage_0_job_1
+    steps:
+    - script: |
+        export CI=azure
+        export GIT_BRANCH=$BUILD_SOURCEBRANCHNAME
+        export FEEDSTOCK_NAME=$(basename ${BUILD_REPOSITORY_NAME})
+        .scripts/run_docker_build.sh
+      env:
+        ANACONDA_API_TOKEN: $(ANACONDA_API_TOKEN)
+        CURRENT_RECIPES: ros-noetic-imu-complementary-filter ros-noetic-plotjuggler
+        DOCKER_IMAGE: condaforge/linux-anvil-cos7-x86_64
+      displayName: Build ros-noetic-imu-complementary-filter ros-noetic-plotjuggler
+- stage: stage_1
+  jobs:
+  - job: stage_1_job_0
+    steps:
+    - script: |
+        export CI=azure
+        export GIT_BRANCH=$BUILD_SOURCEBRANCHNAME
+        export FEEDSTOCK_NAME=$(basename ${BUILD_REPOSITORY_NAME})
+        .scripts/run_docker_build.sh
+      env:
+        ANACONDA_API_TOKEN: $(ANACONDA_API_TOKEN)
+        CURRENT_RECIPES: ros-noetic-rviz-imu-plugin ros-noetic-imu-tools
+        DOCKER_IMAGE: condaforge/linux-anvil-cos7-x86_64
+      displayName: Build ros-noetic-rviz-imu-plugin ros-noetic-imu-tools
